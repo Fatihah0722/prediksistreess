@@ -1,0 +1,26 @@
+# -*- coding: utf-8 -*-
+import streamlit as st
+import pickle
+import numpy as np
+
+# Load model
+with open("model_stress_predictor.pkl", "rb") as f:
+    model = pickle.load(f)
+
+st.title("Prediksi Tingkat Stres Berdasarkan Kebiasaan Digital")
+
+st.write("Masukkan data berikut untuk memprediksi tingkat stres:")
+
+# Input form
+age = st.number_input("Usia", min_value=10, max_value=100, value=25)
+screen_time = st.number_input("Rata-rata waktu layar per hari (jam)", min_value=0.0, value=3.0)
+sleep_duration = st.number_input("Durasi tidur (jam per hari)", min_value=0.0, value=7.0)
+
+# Prediksi
+if st.button("Prediksi Stres"):
+    input_data = np.array([[age, screen_time, sleep_duration]])
+    prediction = model.predict(input_data)
+
+    stress_level = prediction[0]
+    st.subheader("Hasil Prediksi:")
+    st.write(f"Tingkat stres diprediksi: **{stress_level}**")
